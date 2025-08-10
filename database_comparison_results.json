@@ -1,0 +1,123 @@
+{
+  "experiment_info": {
+    "title": "MongoDB vs PostgreSQL Database Comparison",
+    "date": "2025-08-10T12:22:36.574774",
+    "objectives": [
+      "Schema Flexibility & Data Structure Support",
+      "Performance Analysis (CRUD Operations)",
+      "Data Integrity & Consistency"
+    ]
+  },
+  "results": {
+    "mongodb": {
+      "metrics": {},
+      "errors": [],
+      "objective_1": {
+        "basic_insertion": {
+          "time": 0.4158949851989746,
+          "count": 100,
+          "rate": 240.4453132613693
+        },
+        "schema_evolution": {
+          "time": 1.040118932723999,
+          "count": 100,
+          "migration_required": false
+        }
+      },
+      "objective_2": {
+        "1000": {
+          "create_time": 3.110750436782837,
+          "create_rate": 321.465839295745,
+          "avg_read_time": 0.02152986526489258,
+          "single_update_time": 0.12314367294311523,
+          "bulk_update_time": 0.1414344310760498,
+          "delete_time": 0.08747029304504395,
+          "docs_before_delete": 1000,
+          "docs_after_delete": 820
+        },
+        "5000": {
+          "create_time": 5.7226667404174805,
+          "create_rate": 873.7185348722996,
+          "avg_read_time": 0.028029823303222658,
+          "single_update_time": 0.6302247047424316,
+          "bulk_update_time": 2.2972071170806885,
+          "delete_time": 0.29398298263549805,
+          "docs_before_delete": 5000,
+          "docs_after_delete": 4115
+        },
+        "10000": {
+          "create_time": 7.546234130859375,
+          "create_rate": 1325.1642907693863,
+          "avg_read_time": 0.052959108352661134,
+          "single_update_time": 1.5294747352600098,
+          "bulk_update_time": 3.54080867767334,
+          "delete_time": 0.4060213565826416,
+          "docs_before_delete": 10000,
+          "docs_after_delete": 8198
+        }
+      },
+      "objective_3": {
+        "validation_supported": true,
+        "valid_insertions": 1,
+        "blocked_invalid_insertions": 3,
+        "transactions_supported": true,
+        "successful_transactions": 1
+      }
+    },
+    "postgresql": {
+      "metrics": {},
+      "errors": [],
+      "objective_1": {
+        "basic_insertion": {
+          "time": 1.8300926685333252,
+          "count": 100,
+          "rate": 54.64204174979954
+        },
+        "schema_evolution": {
+          "time": 1.7547187805175781,
+          "count": 100,
+          "migration_required": true
+        }
+      },
+      "objective_2": {
+        "1000": {
+          "create_time": 18.015944242477417,
+          "create_rate": 55.506388482388395,
+          "avg_read_time": 0.10524625778198242,
+          "single_update_time": 0.1947307586669922,
+          "bulk_update_time": 0.12178826332092285,
+          "delete_time": 0.03723716735839844,
+          "docs_before_delete": 1000,
+          "docs_after_delete": 813
+        },
+        "5000": {
+          "create_time": 91.8466637134552,
+          "create_rate": 54.43855876571724,
+          "avg_read_time": 0.02186431884765625,
+          "single_update_time": 0.23043417930603027,
+          "bulk_update_time": 0.5935099124908447,
+          "delete_time": 0.0361483097076416,
+          "docs_before_delete": 5000,
+          "docs_after_delete": 4122
+        },
+        "10000": {
+          "create_time": 184.50370335578918,
+          "create_rate": 54.19945409288842,
+          "avg_read_time": 0.028024864196777344,
+          "single_update_time": 0.6973221302032471,
+          "bulk_update_time": 1.9213571548461914,
+          "delete_time": 0.03708624839782715,
+          "docs_before_delete": 10000,
+          "docs_after_delete": 8211
+        }
+      },
+      "objective_3": {
+        "validation_supported": true,
+        "valid_insertions": 1,
+        "blocked_invalid_insertions": 3,
+        "transactions_supported": true,
+        "successful_transactions": 1
+      }
+    }
+  }
+}
