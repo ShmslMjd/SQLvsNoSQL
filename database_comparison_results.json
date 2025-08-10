@@ -1,7 +1,7 @@
 {
   "experiment_info": {
     "title": "MongoDB vs PostgreSQL Database Comparison",
-    "date": "2025-08-10T12:22:36.574774",
+    "date": "2025-08-10T13:07:57.739009",
     "objectives": [
       "Schema Flexibility & Data Structure Support",
       "Performance Analysis (CRUD Operations)",
@@ -14,46 +14,46 @@
       "errors": [],
       "objective_1": {
         "basic_insertion": {
-          "time": 0.4158949851989746,
+          "time": 0.0672461986541748,
           "count": 100,
-          "rate": 240.4453132613693
+          "rate": 1487.0729052547235
         },
         "schema_evolution": {
-          "time": 1.040118932723999,
+          "time": 1.0423226356506348,
           "count": 100,
           "migration_required": false
         }
       },
       "objective_2": {
         "1000": {
-          "create_time": 3.110750436782837,
-          "create_rate": 321.465839295745,
-          "avg_read_time": 0.02152986526489258,
-          "single_update_time": 0.12314367294311523,
-          "bulk_update_time": 0.1414344310760498,
-          "delete_time": 0.08747029304504395,
+          "create_time": 3.1158292293548584,
+          "create_rate": 320.94185091365,
+          "avg_read_time": 0.01731219291687012,
+          "single_update_time": 0.102935791015625,
+          "bulk_update_time": 0.2568991184234619,
+          "delete_time": 0.04374384880065918,
           "docs_before_delete": 1000,
-          "docs_after_delete": 820
+          "docs_after_delete": 806
         },
         "5000": {
-          "create_time": 5.7226667404174805,
-          "create_rate": 873.7185348722996,
-          "avg_read_time": 0.028029823303222658,
-          "single_update_time": 0.6302247047424316,
-          "bulk_update_time": 2.2972071170806885,
-          "delete_time": 0.29398298263549805,
+          "create_time": 5.6926658153533936,
+          "create_rate": 878.3231199897172,
+          "avg_read_time": 0.024513912200927735,
+          "single_update_time": 0.5768520832061768,
+          "bulk_update_time": 2.1744654178619385,
+          "delete_time": 0.18929815292358398,
           "docs_before_delete": 5000,
-          "docs_after_delete": 4115
+          "docs_after_delete": 4093
         },
         "10000": {
-          "create_time": 7.546234130859375,
-          "create_rate": 1325.1642907693863,
-          "avg_read_time": 0.052959108352661134,
-          "single_update_time": 1.5294747352600098,
-          "bulk_update_time": 3.54080867767334,
-          "delete_time": 0.4060213565826416,
+          "create_time": 6.748571395874023,
+          "create_rate": 1481.7950960871292,
+          "avg_read_time": 0.15867938995361328,
+          "single_update_time": 1.6575889587402344,
+          "bulk_update_time": 4.938248157501221,
+          "delete_time": 0.6894495487213135,
           "docs_before_delete": 10000,
-          "docs_after_delete": 8198
+          "docs_after_delete": 8202
         }
       },
       "objective_3": {
@@ -69,46 +69,46 @@
       "errors": [],
       "objective_1": {
         "basic_insertion": {
-          "time": 1.8300926685333252,
+          "time": 1.9549553394317627,
           "count": 100,
-          "rate": 54.64204174979954
+          "rate": 51.152063672751986
         },
         "schema_evolution": {
-          "time": 1.7547187805175781,
+          "time": 1.8771140575408936,
           "count": 100,
           "migration_required": true
         }
       },
       "objective_2": {
         "1000": {
-          "create_time": 18.015944242477417,
-          "create_rate": 55.506388482388395,
-          "avg_read_time": 0.10524625778198242,
-          "single_update_time": 0.1947307586669922,
-          "bulk_update_time": 0.12178826332092285,
-          "delete_time": 0.03723716735839844,
+          "create_time": 19.32943081855774,
+          "create_rate": 51.734580774097246,
+          "avg_read_time": 0.02028937339782715,
+          "single_update_time": 0.03995013236999512,
+          "bulk_update_time": 0.09120845794677734,
+          "delete_time": 0.03149056434631348,
           "docs_before_delete": 1000,
-          "docs_after_delete": 813
+          "docs_after_delete": 805
         },
         "5000": {
-          "create_time": 91.8466637134552,
-          "create_rate": 54.43855876571724,
-          "avg_read_time": 0.02186431884765625,
-          "single_update_time": 0.23043417930603027,
-          "bulk_update_time": 0.5935099124908447,
-          "delete_time": 0.0361483097076416,
+          "create_time": 92.91773295402527,
+          "create_rate": 53.81104167138847,
+          "avg_read_time": 0.021962690353393554,
+          "single_update_time": 0.5312087535858154,
+          "bulk_update_time": 0.82039475440979,
+          "delete_time": 0.032602548599243164,
           "docs_before_delete": 5000,
-          "docs_after_delete": 4122
+          "docs_after_delete": 4159
         },
         "10000": {
-          "create_time": 184.50370335578918,
-          "create_rate": 54.19945409288842,
-          "avg_read_time": 0.028024864196777344,
-          "single_update_time": 0.6973221302032471,
-          "bulk_update_time": 1.9213571548461914,
-          "delete_time": 0.03708624839782715,
+          "create_time": 184.67332458496094,
+          "create_rate": 54.14967225220117,
+          "avg_read_time": 0.03229975700378418,
+          "single_update_time": 0.5240464210510254,
+          "bulk_update_time": 1.178229808807373,
+          "delete_time": 0.04740571975708008,
           "docs_before_delete": 10000,
-          "docs_after_delete": 8211
+          "docs_after_delete": 8185
         }
       },
       "objective_3": {

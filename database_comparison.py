@@ -851,17 +851,219 @@ class DatabaseComparison:
         
         return results
 
+    def create_individual_objective_graphs(self):
+        """Create individual graphs for each objective"""
+        if not HAS_MATPLOTLIB:
+            return
+        
+        print("\n📊 Creating Individual Objective Visualizations...")
+        
+        # Objective 1: Schema Flexibility Graph
+        self.create_objective_1_graph()
+        
+        # Objective 2: Performance Analysis Graph  
+        self.create_objective_2_graph()
+        
+        # Objective 3: Data Integrity Graph
+        self.create_objective_3_graph()
+
+    def create_objective_1_graph(self):
+        """Create Schema Flexibility comparison graph"""
+        print("   📋 Creating Objective 1: Schema Flexibility Graph...")
+        
+        fig, ax = plt.subplots(1, 1, figsize=(12, 8))
+        fig.suptitle('Objective 1: Schema Flexibility & Data Structure Support', fontsize=16, fontweight='bold')
+        
+        if 'objective_1' in self.results['mongodb'] and 'objective_1' in self.results['postgresql']:
+            mongo_obj1 = self.results['mongodb']['objective_1']
+            postgres_obj1 = self.results['postgresql']['objective_1']
+            
+            # Basic insertion rates comparison
+            categories = ['Basic\nInsertion Rate\n(docs/sec)', 'Schema Evolution\nFlexibility\n(% no migration needed)']
+            mongo_values = [
+                mongo_obj1.get('basic_insertion', {}).get('rate', 0),
+                100 if not mongo_obj1.get('schema_evolution', {}).get('migration_required', True) else 0
+            ]
+            postgres_values = [
+                postgres_obj1.get('basic_insertion', {}).get('rate', 0),
+                0 if postgres_obj1.get('schema_evolution', {}).get('migration_required', True) else 100
+            ]
+            
+            x = np.arange(len(categories))
+            width = 0.35
+            
+            bars1 = ax.bar(x - width/2, mongo_values, width, label='MongoDB', color='#47A248', alpha=0.8)
+            bars2 = ax.bar(x + width/2, postgres_values, width, label='PostgreSQL', color='#336791', alpha=0.8)
+            
+            ax.set_title('Performance & Flexibility Comparison', fontsize=14, fontweight='bold')
+            ax.set_ylabel('Rate (docs/sec) / Flexibility Score (%)', fontsize=12)
+            ax.set_xticks(x)
+            ax.set_xticklabels(categories)
+            ax.legend()
+            ax.grid(True, alpha=0.3, axis='y')
+            
+            # Add value labels
+            for bars in [bars1, bars2]:
+                for bar in bars:
+                    height = bar.get_height()
+                    if height > 0:
+                        if bar in bars1 and bar.get_x() < 0.5:  # First category - insertion rate
+                            label = f'{height:.0f} docs/sec'
+                        else:  # Second category - flexibility percentage
+                            label = f'{height:.0f}%'
+                        ax.text(bar.get_x() + bar.get_width()/2., height,
+                                label, ha='center', va='bottom', fontweight='bold')
+        
+        plt.tight_layout()
+        plt.savefig('objective_1_schema_flexibility.png', dpi=300, bbox_inches='tight')
+        plt.show()
+        print("   ✅ Saved: objective_1_schema_flexibility.png")
+
+    def create_objective_2_graph(self):
+        """Create Performance Analysis comparison graph"""
+        print("   📊 Creating Objective 2: Performance Analysis Graph...")
+        
+        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 8))
+        fig.suptitle('Objective 2: Performance Analysis (CRUD Operations)', fontsize=16, fontweight='bold')
+        
+        if 'objective_2' in self.results['mongodb'] and 'objective_2' in self.results['postgresql']:
+            # CRUD Performance (10K dataset)
+            mongo_obj2 = self.results['mongodb']['objective_2'].get(10000, {})
+            postgres_obj2 = self.results['postgresql']['objective_2'].get(10000, {})
+            
+            operations = ['CREATE\n(Insert)', 'READ\n(Query Avg)', 'UPDATE\n(Single)', 'UPDATE\n(Bulk)', 'DELETE']
+            mongo_times = [
+                mongo_obj2.get('create_time', 0),
+                mongo_obj2.get('avg_read_time', 0),
+                mongo_obj2.get('single_update_time', 0),
+                mongo_obj2.get('bulk_update_time', 0),
+                mongo_obj2.get('delete_time', 0)
+            ]
+            postgres_times = [
+                postgres_obj2.get('create_time', 0),
+                postgres_obj2.get('avg_read_time', 0),
+                postgres_obj2.get('single_update_time', 0),
+                postgres_obj2.get('bulk_update_time', 0),
+                postgres_obj2.get('delete_time', 0)
+            ]
+            
+            x = np.arange(len(operations))
+            width = 0.35
+            
+            bars1 = ax1.bar(x - width/2, mongo_times, width, label='MongoDB', color='#47A248', alpha=0.8)
+            bars2 = ax1.bar(x + width/2, postgres_times, width, label='PostgreSQL', color='#336791', alpha=0.8)
+            
+            ax1.set_title('CRUD Performance (10,000 Documents)', fontsize=14, fontweight='bold')
+            ax1.set_ylabel('Time (seconds)', fontsize=12)
+            ax1.set_xticks(x)
+            ax1.set_xticklabels(operations)
+            ax1.legend()
+            ax1.grid(True, alpha=0.3, axis='y')
+            
+            # Add value labels
+            for bars in [bars1, bars2]:
+                for bar in bars:
+                    height = bar.get_height()
+                    if height > 0:
+                        ax1.text(bar.get_x() + bar.get_width()/2., height,
+                                f'{height:.2f}s', ha='center', va='bottom', fontweight='bold', fontsize=9)
+            
+            # Scaling Performance
+            dataset_sizes = [1000, 5000, 10000]
+            mongo_create_rates = []
+            postgres_create_rates = []
+            
+            for size in dataset_sizes:
+                mongo_data = self.results['mongodb']['objective_2'].get(size, {})
+                postgres_data = self.results['postgresql']['objective_2'].get(size, {})
+                mongo_create_rates.append(mongo_data.get('create_rate', 0))
+                postgres_create_rates.append(postgres_data.get('create_rate', 0))
+            
+            ax2.plot(dataset_sizes, mongo_create_rates, 'o-', color='#47A248', linewidth=3, 
+                    markersize=10, label='MongoDB', markerfacecolor='#47A248', markeredgecolor='#2E7D32')
+            ax2.plot(dataset_sizes, postgres_create_rates, 's-', color='#336791', linewidth=3, 
+                    markersize=10, label='PostgreSQL', markerfacecolor='#336791', markeredgecolor='#1565C0')
+            
+            ax2.set_title('Insert Performance Scaling', fontsize=14, fontweight='bold')
+            ax2.set_xlabel('Dataset Size (documents)', fontsize=12)
+            ax2.set_ylabel('Insert Rate (docs/sec)', fontsize=12)
+            ax2.legend()
+            ax2.grid(True, alpha=0.3)
+            
+            # Add annotations
+            for i, (size, mongo_rate, postgres_rate) in enumerate(zip(dataset_sizes, mongo_create_rates, postgres_create_rates)):
+                if mongo_rate > 0:
+                    ax2.annotate(f'{mongo_rate:.0f}', (size, mongo_rate), textcoords="offset points", 
+                               xytext=(0,15), ha='center', fontweight='bold', color='#2E7D32', fontsize=11)
+                if postgres_rate > 0:
+                    ax2.annotate(f'{postgres_rate:.0f}', (size, postgres_rate), textcoords="offset points", 
+                               xytext=(0,-20), ha='center', fontweight='bold', color='#1565C0', fontsize=11)
+        
+        plt.tight_layout()
+        plt.savefig('objective_2_performance_analysis.png', dpi=300, bbox_inches='tight')
+        plt.show()
+        print("   ✅ Saved: objective_2_performance_analysis.png")
+
+    def create_objective_3_graph(self):
+        """Create Data Integrity comparison graph"""
+        print("   🛡️  Creating Objective 3: Data Integrity Graph...")
+        
+        fig, ax = plt.subplots(1, 1, figsize=(12, 8))
+        fig.suptitle('Objective 3: Data Integrity & Consistency Test Results', fontsize=16, fontweight='bold')
+        
+        if 'objective_3' in self.results['mongodb'] and 'objective_3' in self.results['postgresql']:
+            mongo_obj3 = self.results['mongodb']['objective_3']
+            postgres_obj3 = self.results['postgresql']['objective_3']
+            
+            # Data validation results
+            categories = ['Valid Data\nAccepted', 'Invalid Data\nBlocked', 'Transactions\nSuccessful']
+            mongo_values = [
+                mongo_obj3.get('valid_insertions', 0),
+                mongo_obj3.get('blocked_invalid_insertions', 0),
+                mongo_obj3.get('successful_transactions', 0)
+            ]
+            postgres_values = [
+                postgres_obj3.get('valid_insertions', 0),
+                postgres_obj3.get('blocked_invalid_insertions', 0),
+                postgres_obj3.get('successful_transactions', 0)
+            ]
+            
+            x = np.arange(len(categories))
+            width = 0.35
+            
+            bars1 = ax.bar(x - width/2, mongo_values, width, label='MongoDB', color='#47A248', alpha=0.8)
+            bars2 = ax.bar(x + width/2, postgres_values, width, label='PostgreSQL', color='#336791', alpha=0.8)
+            
+            ax.set_title('Data Integrity Test Results', fontsize=14, fontweight='bold')
+            ax.set_ylabel('Count (Success Rate)', fontsize=12)
+            ax.set_xticks(x)
+            ax.set_xticklabels(categories)
+            ax.legend()
+            ax.grid(True, alpha=0.3, axis='y')
+            
+            # Add value labels
+            for bars in [bars1, bars2]:
+                for bar in bars:
+                    height = bar.get_height()
+                    ax.text(bar.get_x() + bar.get_width()/2., height,
+                            f'{int(height)}', ha='center', va='bottom', fontweight='bold')
+        
+        plt.tight_layout()
+        plt.savefig('objective_3_data_integrity.png', dpi=300, bbox_inches='tight')
+        plt.show()
+        print("   ✅ Saved: objective_3_data_integrity.png")
+
     def create_comparison_visualizations(self):
         """Create side-by-side comparison visualizations"""
         if not HAS_MATPLOTLIB:
             self.create_text_comparison_report()
             return
         
-        print("\n📊 Creating Comparison Visualizations...")
+        print("\n📊 Creating Comprehensive Comparison Visualization...")
         
         # Create comprehensive comparison chart
         fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(20, 16))
-        fig.suptitle('MongoDB vs PostgreSQL Database Comparison', fontsize=20, fontweight='bold')
+        fig.suptitle('MongoDB vs PostgreSQL - Complete Database Comparison', fontsize=20, fontweight='bold')
         
         # 1. Schema Flexibility Comparison
         if 'objective_1' in self.results['mongodb'] and 'objective_1' in self.results['postgresql']:
@@ -1010,9 +1212,9 @@ class DatabaseComparison:
                             f'{int(height)}', ha='center', va='bottom', fontweight='bold')
         
         plt.tight_layout()
-        plt.savefig('mongodb_vs_postgresql_comparison.png', dpi=300, bbox_inches='tight')
+        plt.savefig('mongodb_vs_postgresql_comprehensive_comparison.png', dpi=300, bbox_inches='tight')
         plt.show()
-        print("✅ Comparison visualization saved: 'mongodb_vs_postgresql_comparison.png'")
+        print("✅ Comprehensive comparison visualization saved: 'mongodb_vs_postgresql_comprehensive_comparison.png'")
 
     def create_text_comparison_report(self):
         """Create a text-based comparison report when matplotlib is not available"""
@@ -1116,7 +1318,10 @@ class DatabaseComparison:
         print("\n🔄 Running Objective 3: Data Integrity...")
         self.run_objective_3_data_integrity()
         
-        # Create visualizations and reports
+        # Create individual objective graphs
+        self.create_individual_objective_graphs()
+        
+        # Create comprehensive comparison visualization
         self.create_comparison_visualizations()
         
         # Save results
